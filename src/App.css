@@ -27,3 +27,11 @@
 .input-group {
 	margin-bottom: 1rem;
 }
+
+.bg-dark {
+	background-color: #343a40 !important;
+}
+
+.bg-secondary {
+	background-color: #6c757d !important;
+}
