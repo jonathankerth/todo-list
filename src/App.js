@@ -10,7 +10,9 @@ const App = () => {
 	const [ws, setWs] = useState(null);
 
 	useEffect(() => {
-		const webSocket = new WebSocket("ws://localhost:8080");
+		const webSocket = new WebSocket(
+			"https://get-it-done-6f00422d8b4b.herokuapp.com/"
+		);
 		webSocket.onopen = () => console.log("Connected to WebSocket server");
 		webSocket.onmessage = (event) => {
 			setTasks(JSON.parse(event.data));
