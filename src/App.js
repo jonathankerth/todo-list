@@ -11,7 +11,7 @@ const App = () => {
 
 	useEffect(() => {
 		const webSocket = new WebSocket(
-			"https://get-it-done-6f00422d8b4b.herokuapp.com/"
+			"wss://get-it-done-6f00422d8b4b.herokuapp.com"
 		);
 		webSocket.onopen = () => console.log("Connected to WebSocket server");
 		webSocket.onmessage = (event) => {
