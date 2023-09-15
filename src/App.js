@@ -31,6 +31,12 @@ const App = () => {
 		}
 	}, [darkMode]);
 
+	const safeSend = (data) => {
+		if (ws && ws.readyState === WebSocket.OPEN) {
+			ws.send(JSON.stringify(data));
+		}
+	};
+
 	const addTask = () => {
 		if (newTask === "") return;
 		const updatedTasks = [
@@ -38,7 +44,7 @@ const App = () => {
 			{ text: newTask, dueDate, category, completed: false },
 		];
 		setTasks(updatedTasks);
-		ws.send(JSON.stringify(updatedTasks));
+		safeSend(updatedTasks);
 		setNewTask("");
 		setDueDate("");
 	};
@@ -46,14 +52,14 @@ const App = () => {
 	const deleteTask = (index) => {
 		const updatedTasks = tasks.filter((_, i) => i !== index);
 		setTasks(updatedTasks);
-		ws.send(JSON.stringify(updatedTasks));
+		safeSend(updatedTasks);
 	};
 
 	const toggleCompleted = (index) => {
 		const updatedTasks = [...tasks];
 		updatedTasks[index].completed = !updatedTasks[index].completed;
 		setTasks(updatedTasks);
-		ws.send(JSON.stringify(updatedTasks));
+		safeSend(updatedTasks);
 	};
 
 	return (
