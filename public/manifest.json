@@ -1,6 +1,7 @@
 {
 	"short_name": "Todo List",
 	"name": "A todo list app built with React",
+	"description": "A versatile todo list app to keep track of your tasks, built with React and WebSocket for real-time updates.",
 	"icons": [
 		{
 			"src": "favicon.ico",
@@ -20,6 +21,6 @@
 	],
 	"start_url": ".",
 	"display": "standalone",
-	"theme_color": "#000000",
+	"theme_color": "#343a40",
 	"background_color": "#ffffff"
 }
