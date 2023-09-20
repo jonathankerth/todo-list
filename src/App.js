@@ -12,7 +12,7 @@ const App = () => {
 	const [newTask, setNewTask] = useState("");
 	const [dueDate, setDueDate] = useState("");
 	const [category, setCategory] = useState("Work");
-	const [darkMode, setDarkMode] = useState(false);
+	const [darkMode, setDarkMode] = useState(true);
 	const [ws, setWs] = useState(null);
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true); // Added loading state
@@ -98,8 +98,14 @@ const App = () => {
 	return (
 		<div className="container mt-5">
 			<Routes>
-				<Route path="/login" element={<Login />} />
-				<Route path="/signup" element={<Signup />} />
+				<Route
+					path="/login"
+					element={<Login darkMode={darkMode} setDarkMode={setDarkMode} />}
+				/>
+				<Route
+					path="/signup"
+					element={<Signup darkMode={darkMode} setDarkMode={setDarkMode} />}
+				/>
 				<Route
 					path="/"
 					element={

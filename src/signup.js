@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css"; // Import the same CSS file
 
-const Signup = () => {
+const Signup = ({ darkMode, setDarkMode }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState(null);
@@ -22,8 +22,14 @@ const Signup = () => {
 	};
 
 	return (
-		<div className="container mt-5 login-container">
-			<h1 className="text-center">Sign Up</h1>
+		<div
+			className={`container mt-5 login-container ${
+				darkMode ? "dark-mode-box" : "light-mode-box"
+			}`}
+		>
+			<h1 className={`text-center ${darkMode ? "text-white" : "text-dark"}`}>
+				Sign Up
+			</h1>
 			<div className="form-group">
 				<input
 					type="email"
@@ -46,9 +52,12 @@ const Signup = () => {
 				Sign Up
 			</button>
 			{error && <div className="alert alert-danger mt-3">{error}</div>}
-			<div className="mt-3">
-				Already have an account? <a href="/login">Login</a> instead.
+			<div className={`mt-3 ${darkMode ? "text-white" : "text-dark"}`}>
+				Already have an account? <Link to="/login">Login</Link> instead.
 			</div>
+			<button onClick={() => setDarkMode(!darkMode)}>
+				{darkMode ? "Light Mode" : "Dark Mode"}
+			</button>
 		</div>
 	);
 };

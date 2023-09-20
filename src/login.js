@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css";
 
-const Login = ({ setIsLoggedIn }) => {
+const Login = ({ setIsLoggedIn, darkMode, setDarkMode }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState(null);
@@ -27,8 +27,14 @@ const Login = ({ setIsLoggedIn }) => {
 	};
 
 	return (
-		<div className="container mt-5 login-container">
-			<h1 className="text-center">Login</h1>
+		<div
+			className={`container mt-5 login-container ${
+				darkMode ? "dark-mode-box" : "light-mode-box"
+			}`}
+		>
+			<h1 className={`text-center ${darkMode ? "text-white" : "text-dark"}`}>
+				Login
+			</h1>
 			<div className="form-group">
 				<input
 					type="email"
@@ -51,9 +57,12 @@ const Login = ({ setIsLoggedIn }) => {
 				Login
 			</button>
 			{error && <div className="alert alert-danger mt-3">{error}</div>}
-			<div className="mt-3">
-				Don't have an account? <a href="/signup">Sign up</a> instead.
+			<div className={`mt-3 ${darkMode ? "text-white" : "text-dark"}`}>
+				Don't have an account? <Link to="/signup">Sign up</Link> instead.
 			</div>
+			<button onClick={() => setDarkMode(!darkMode)}>
+				{darkMode ? "Light Mode" : "Dark Mode"}
+			</button>
 		</div>
 	);
 };

@@ -1,3 +1,15 @@
+.dark-mode-text {
+	color: #fff;
+}
+.login-container.dark-mode-box {
+	background-color: #d3d3d3; /* Light grey */
+}
+
+.login-container.light-mode-box {
+	background-color: #ffffff; /* White */
+	border: 1px solid #6f6f6f; /* Light grey border */
+}
+
 .login-container {
 	max-width: 400px;
 	margin: auto;
