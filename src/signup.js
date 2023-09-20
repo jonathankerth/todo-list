@@ -1,53 +1,53 @@
 import React, { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const Signup = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState(null);
-	const navigate = useNavigate(); // Initialize useNavigate
-
-	const isValidEmail = (email) => {
-		// Basic email validation regex
-		const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-		return re.test(email);
-	};
+	const navigate = useNavigate();
 
 	const handleSignup = async () => {
-		if (!isValidEmail(email)) {
-			setError("Invalid email format");
-			return;
-		}
-
 		const auth = getAuth();
 
 		try {
 			await createUserWithEmailAndPassword(auth, email, password);
-			console.log("Signup successful"); // Console log upon successful signup
-			navigate("/login"); // Navigate to login page
+			navigate("/login"); // Navigate to login path
 		} catch (error) {
 			setError(error.message); // Display Firebase error message
 		}
 	};
 
 	return (
-		<div>
-			<h2>Signup</h2>
-			<input
-				type="email"
-				placeholder="Email"
-				value={email}
-				onChange={(e) => setEmail(e.target.value)}
-			/>
-			<input
-				type="password"
-				placeholder="Password"
-				value={password}
-				onChange={(e) => setPassword(e.target.value)}
-			/>
-			<button onClick={handleSignup}>Signup</button>
-			{error && <div style={{ color: "red" }}>{error}</div>}
+		<div className="container signup-container">
+			<h1 className="text-center">Sign Up</h1>
+			<div className="form-group">
+				<input
+					type="email"
+					className="form-control"
+					placeholder="Email"
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
+				/>
+			</div>
+			<div className="form-group">
+				<input
+					type="password"
+					className="form-control"
+					placeholder="Password"
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
+				/>
+			</div>
+			<button className="btn btn-success" onClick={handleSignup}>
+				Sign Up
+			</button>
+			{error && <div className="alert alert-danger mt-3">{error}</div>}
+			<div className="mt-3">
+				Already have an account? <a href="/login">Login</a> instead.
+			</div>
 		</div>
 	);
 };

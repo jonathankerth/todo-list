@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth"; // Import Firebase authentication functions
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import Login from "./login";
 import Signup from "./signup";
 import app from "./firebase";
@@ -14,7 +14,8 @@ const App = () => {
 	const [category, setCategory] = useState("Work");
 	const [darkMode, setDarkMode] = useState(false);
 	const [ws, setWs] = useState(null);
-	const [user, setUser] = useState(null); // Add user state
+	const [user, setUser] = useState(null);
+	const [loading, setLoading] = useState(true); // Added loading state
 
 	const handleLogout = () => {
 		const auth = getAuth(app);
@@ -24,16 +25,28 @@ const App = () => {
 	};
 
 	useEffect(() => {
-		const webSocket = new WebSocket(
-			"wss://get-it-done-6f00422d8b4b.herokuapp.com"
-		);
-		webSocket.onopen = () => console.log("Connected to WebSocket server");
-		webSocket.onmessage = (event) => {
-			setTasks(JSON.parse(event.data));
-		};
-		setWs(webSocket);
+		const auth = getAuth(app);
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
+			setUser(user);
+			setLoading(false); // Set loading to false
+
+			if (user) {
+				const webSocket = new WebSocket(
+					"wss://get-it-done-6f00422d8b4b.herokuapp.com"
+				);
+				webSocket.onopen = () => console.log("Connected to WebSocket server");
+				webSocket.onmessage = (event) => {
+					setTasks(JSON.parse(event.data));
+				};
+				setWs(webSocket);
+				return () => {
+					webSocket.close();
+				};
+			}
+		});
+
 		return () => {
-			webSocket.close();
+			unsubscribe();
 		};
 	}, []);
 
@@ -44,18 +57,6 @@ const App = () => {
 			document.body.classList.remove("bg-dark", "text-white");
 		}
 	}, [darkMode]);
-
-	useEffect(() => {
-		// Initialize Firebase Authentication state observer
-		const auth = getAuth(app); // Pass app instance
-		const unsubscribe = onAuthStateChanged(auth, (user) => {
-			setUser(user); // Set the user state based on authentication status
-		});
-
-		return () => {
-			unsubscribe(); // Cleanup the observer when the component unmounts
-		};
-	}, []);
 
 	const safeSend = (data) => {
 		if (ws && ws.readyState === WebSocket.OPEN) {
@@ -90,6 +91,10 @@ const App = () => {
 
 	let location = useLocation();
 
+	if (loading) {
+		return <div>Loading...</div>;
+	}
+
 	return (
 		<div className="container mt-5">
 			<Routes>
@@ -98,7 +103,7 @@ const App = () => {
 				<Route
 					path="/"
 					element={
-						user ? ( // Check if a user is authenticated
+						user ? (
 							<>
 								<button onClick={() => setDarkMode(!darkMode)}>
 									{darkMode ? "Light Mode" : "Dark Mode"}
