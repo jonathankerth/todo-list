@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { ref, set } from "firebase/database";
 import Login from "./login";
 import Signup from "./signup";
-import app from "./firebase";
+import app, { db } from "./firebase";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -64,7 +65,7 @@ const App = () => {
 		}
 	};
 
-	const addTask = () => {
+	const addTask = async () => {
 		if (newTask === "") return;
 		const updatedTasks = [
 			...tasks,
@@ -74,6 +75,11 @@ const App = () => {
 		safeSend(updatedTasks);
 		setNewTask("");
 		setDueDate("");
+
+		if (user) {
+			const tasksRef = ref(db, `tasks/${user.uid}`);
+			await set(tasksRef, updatedTasks);
+		}
 	};
 
 	const deleteTask = (index) => {
