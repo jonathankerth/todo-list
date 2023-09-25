@@ -77,36 +77,39 @@ const App = () => {
 			...tasks,
 			{ text: newTask, dueDate, category, completed: false },
 		];
-		setTasks(updatedTasks);
-		safeSend(updatedTasks);
 
 		if (user) {
 			const tasksRef = ref(db, `tasks/${user.uid}`);
 			await set(tasksRef, updatedTasks);
 		}
-	};
 
-	const deleteTask = (index) => {
-		const updatedTasks = tasks.filter((_, i) => i !== index);
 		setTasks(updatedTasks);
 		safeSend(updatedTasks);
+	};
+
+	const deleteTask = async (index) => {
+		const updatedTasks = tasks.filter((_, i) => i !== index);
 
 		if (user) {
 			const tasksRef = ref(db, `tasks/${user.uid}`);
-			set(tasksRef, updatedTasks);
+			await set(tasksRef, updatedTasks);
 		}
+
+		setTasks(updatedTasks);
+		safeSend(updatedTasks);
 	};
 
-	const toggleCompleted = (index) => {
+	const toggleCompleted = async (index) => {
 		const updatedTasks = [...tasks];
 		updatedTasks[index].completed = !updatedTasks[index].completed;
-		setTasks(updatedTasks);
-		safeSend(updatedTasks);
 
 		if (user) {
 			const tasksRef = ref(db, `tasks/${user.uid}`);
-			set(tasksRef, updatedTasks);
+			await set(tasksRef, updatedTasks);
 		}
+
+		setTasks(updatedTasks);
+		safeSend(updatedTasks);
 	};
 
 	let location = useLocation();
