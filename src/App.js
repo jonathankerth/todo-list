@@ -32,7 +32,7 @@ const App = () => {
 
 			if (user) {
 				const webSocket = new WebSocket(
-					"wss://get-it-done-6f00422d8b4b.herokuapp.com"
+					`wss://get-it-done-6f00422d8b4b.herokuapp.com?userId=${user.uid}`
 				);
 				webSocket.onopen = () => console.log("Connected to WebSocket server");
 				webSocket.onmessage = (event) => {
