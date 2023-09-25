@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { ref, set } from "firebase/database";
+import { ref, set, get, child } from "firebase/database";
 import Login from "./login";
 import Signup from "./signup";
 import app, { db } from "./firebase";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
@@ -27,9 +26,9 @@ const App = () => {
 
 	useEffect(() => {
 		const auth = getAuth(app);
-		const unsubscribe = onAuthStateChanged(auth, (user) => {
+		const unsubscribe = onAuthStateChanged(auth, async (user) => {
 			setUser(user);
-			setLoading(false); // Set loading to false
+			setLoading(false);
 
 			if (user) {
 				const webSocket = new WebSocket(
@@ -40,6 +39,13 @@ const App = () => {
 					setTasks(JSON.parse(event.data));
 				};
 				setWs(webSocket);
+
+				const tasksRef = ref(db, `tasks/${user.uid}`);
+				const snapshot = await get(child(tasksRef, "/"));
+				if (snapshot.exists()) {
+					setTasks(snapshot.val());
+				}
+
 				return () => {
 					webSocket.close();
 				};
@@ -73,8 +79,6 @@ const App = () => {
 		];
 		setTasks(updatedTasks);
 		safeSend(updatedTasks);
-		setNewTask("");
-		setDueDate("");
 
 		if (user) {
 			const tasksRef = ref(db, `tasks/${user.uid}`);
@@ -86,6 +90,11 @@ const App = () => {
 		const updatedTasks = tasks.filter((_, i) => i !== index);
 		setTasks(updatedTasks);
 		safeSend(updatedTasks);
+
+		if (user) {
+			const tasksRef = ref(db, `tasks/${user.uid}`);
+			set(tasksRef, updatedTasks);
+		}
 	};
 
 	const toggleCompleted = (index) => {
@@ -93,6 +102,11 @@ const App = () => {
 		updatedTasks[index].completed = !updatedTasks[index].completed;
 		setTasks(updatedTasks);
 		safeSend(updatedTasks);
+
+		if (user) {
+			const tasksRef = ref(db, `tasks/${user.uid}`);
+			set(tasksRef, updatedTasks);
+		}
 	};
 
 	let location = useLocation();
