@@ -15,7 +15,7 @@ const Signup = ({ darkMode, setDarkMode }) => {
 
 		try {
 			await createUserWithEmailAndPassword(auth, email, password);
-			navigate("/login"); // Navigate to login path
+			navigate("/"); // Navigate to home (or any other path where the user's dashboard is)
 		} catch (error) {
 			setError(error.message); // Display Firebase error message
 		}
