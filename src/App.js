@@ -6,6 +6,7 @@ import Login from "./login";
 import Signup from "./signup";
 import app, { db } from "./firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
 const App = () => {
 	const [tasks, setTasks] = useState([]);
@@ -118,8 +119,22 @@ const App = () => {
 		return <div>Loading...</div>;
 	}
 
+	const AppTitle = ({ darkMode }) => (
+		<div
+			className={`app-title-container ${
+				darkMode ? "dark-mode-title" : "light-mode-title"
+			}`}
+		>
+			<h1 className="app-title">
+				To-do list built with React & Bootrap. Powered by Firebase and
+				Websockets.
+			</h1>
+			<p className="app-summary">Stay organized and boost productivity.</p>
+		</div>
+	);
 	return (
-		<div className="container mt-5">
+		<div className="container mt-5 left-align-items">
+			<AppTitle darkMode={darkMode} />
 			<Routes>
 				<Route
 					path="/login"
@@ -134,7 +149,10 @@ const App = () => {
 					element={
 						user ? (
 							<>
-								<button onClick={() => setDarkMode(!darkMode)}>
+								<button
+									className="btn btn-secondary mode-toggle-button"
+									onClick={() => setDarkMode(!darkMode)}
+								>
 									{darkMode ? "Light Mode" : "Dark Mode"}
 								</button>
 								<h1>Todo List</h1>
