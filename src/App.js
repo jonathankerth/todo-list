@@ -16,7 +16,8 @@ const App = () => {
 	const [darkMode, setDarkMode] = useState(true);
 	const [ws, setWs] = useState(null);
 	const [user, setUser] = useState(null);
-	const [loading, setLoading] = useState(true); // Added loading state
+	const [loading, setLoading] = useState(true);
+	const [search, setSearch] = useState("");
 
 	const handleLogout = () => {
 		const auth = getAuth(app);
@@ -65,6 +66,10 @@ const App = () => {
 			document.body.classList.remove("bg-dark", "text-white");
 		}
 	}, [darkMode]);
+
+	const filteredTasks = tasks.filter((task) =>
+		task.text.toLowerCase().includes(search.toLowerCase())
+	);
 
 	const safeSend = (data) => {
 		if (ws && ws.readyState === WebSocket.OPEN) {
@@ -132,9 +137,17 @@ const App = () => {
 			<p className="app-summary">Stay organized and boost productivity.</p>
 		</div>
 	);
+
 	return (
 		<div className="container mt-5 left-align-items">
 			<AppTitle darkMode={darkMode} />
+			<input
+				type="text"
+				className="form-control mt-3 mb-3"
+				placeholder="Search Tasks"
+				value={search}
+				onChange={(e) => setSearch(e.target.value)}
+			/>
 			<Routes>
 				<Route
 					path="/login"
@@ -186,8 +199,9 @@ const App = () => {
 										Add
 									</button>
 								</div>
+
 								<ul className="list-group">
-									{tasks.map((task, index) => (
+									{filteredTasks.map((task, index) => (
 										<li
 											className={`list-group-item ${
 												darkMode ? "bg-secondary text-white" : ""
