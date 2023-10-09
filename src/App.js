@@ -131,7 +131,7 @@ const App = () => {
 			}`}
 		>
 			<h1 className="app-title">
-				To-do list built with React & Bootrap. Powered by Firebase and
+				To-do list built with React & Bootsrap. Powered by Firebase and
 				Websockets.
 			</h1>
 			<p className="app-summary">Stay organized and boost productivity.</p>
