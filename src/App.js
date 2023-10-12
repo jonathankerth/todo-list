@@ -17,7 +17,6 @@ const App = () => {
 	const [ws, setWs] = useState(null);
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
-	const [search, setSearch] = useState("");
 
 	const handleLogout = () => {
 		const auth = getAuth(app);
@@ -66,10 +65,6 @@ const App = () => {
 			document.body.classList.remove("bg-dark", "text-white");
 		}
 	}, [darkMode]);
-
-	const filteredTasks = tasks.filter((task) =>
-		task.text.toLowerCase().includes(search.toLowerCase())
-	);
 
 	const safeSend = (data) => {
 		if (ws && ws.readyState === WebSocket.OPEN) {
@@ -141,13 +136,7 @@ const App = () => {
 	return (
 		<div className="container mt-5 left-align-items">
 			<AppTitle darkMode={darkMode} />
-			<input
-				type="text"
-				className="form-control mt-3 mb-3"
-				placeholder="Search Tasks"
-				value={search}
-				onChange={(e) => setSearch(e.target.value)}
-			/>
+
 			<Routes>
 				<Route
 					path="/login"
@@ -201,7 +190,7 @@ const App = () => {
 								</div>
 
 								<ul className="list-group">
-									{filteredTasks.map((task, index) => (
+									{tasks.map((task, index) => (
 										<li
 											className={`list-group-item ${
 												darkMode ? "bg-secondary text-white" : ""
