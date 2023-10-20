@@ -8,6 +8,21 @@ import app, { db } from "./firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
+// Define a separate component for AppTitle
+const AppTitle = ({ darkMode }) => (
+	<div
+		className={`app-title-container ${
+			darkMode ? "dark-mode-title" : "light-mode-title"
+		}`}
+	>
+		<h1 className="app-title">
+			To-do list built with React & Bootstrap. Powered by Firebase and
+			Websockets.
+		</h1>
+		<p className="app-summary">Stay organized and boost productivity.</p>
+	</div>
+);
+
 const App = () => {
 	const [tasks, setTasks] = useState([]);
 	const [newTask, setNewTask] = useState("");
@@ -59,6 +74,7 @@ const App = () => {
 	}, []);
 
 	useEffect(() => {
+		// Update the body's classes for dark mode
 		if (darkMode) {
 			document.body.classList.add("bg-dark", "text-white");
 		} else {
@@ -119,20 +135,6 @@ const App = () => {
 		return <div>Loading...</div>;
 	}
 
-	const AppTitle = ({ darkMode }) => (
-		<div
-			className={`app-title-container ${
-				darkMode ? "dark-mode-title" : "light-mode-title"
-			}`}
-		>
-			<h1 className="app-title">
-				To-do list built with React & Bootsrap. Powered by Firebase and
-				Websockets.
-			</h1>
-			<p className="app-summary">Stay organized and boost productivity.</p>
-		</div>
-	);
-
 	return (
 		<div className="container mt-5 left-align-items">
 			<AppTitle darkMode={darkMode} />
@@ -158,6 +160,7 @@ const App = () => {
 									{darkMode ? "Light Mode" : "Dark Mode"}
 								</button>
 								<h1>Todo List</h1>
+								{/* Task input form */}
 								<div className="input-group mb-3">
 									<input
 										type="text"
@@ -189,6 +192,7 @@ const App = () => {
 									</button>
 								</div>
 
+								{/* Task list */}
 								<ul className="list-group">
 									{tasks.map((task, index) => (
 										<li
