@@ -15,10 +15,7 @@ const AppTitle = ({ darkMode }) => (
 			darkMode ? "dark-mode-title" : "light-mode-title"
 		}`}
 	>
-		<h1 className="app-title">
-			To-do list built with React & Bootstrap. Powered by Firebase and
-			Websockets.
-		</h1>
+		<h1 className="app-title">To-do list</h1>
 		<p className="app-summary">Stay organized and boost productivity.</p>
 	</div>
 );
@@ -182,6 +179,8 @@ const App = () => {
 									>
 										<option value="Work">Work</option>
 										<option value="Personal">Personal</option>
+										<option value="Family">Family</option>
+										<option value="Long term goals">Long term goals</option>
 									</select>
 									<button
 										className="btn btn-primary"
