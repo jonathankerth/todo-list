@@ -99,6 +99,10 @@ const App = () => {
 
 		setTasks(updatedTasks);
 		safeSend(updatedTasks);
+
+		setNewTask("");
+		setDueDate("");
+		setCategory("Work");
 	};
 
 	const deleteTask = async (index) => {
