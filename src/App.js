@@ -160,7 +160,7 @@ const App = () => {
 								>
 									{darkMode ? "Light Mode" : "Dark Mode"}
 								</button>
-								<h1>Todo List</h1>
+								<h1>Tasks</h1>
 								{/* Task input form */}
 								<div className="input-group mb-3">
 									<input
