@@ -68,30 +68,34 @@
 
 .app-title-container {
 	text-align: center;
-	margin-bottom: 1em !important;
-	padding: 20px !important;
-	border-radius: 10px !important;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+	margin: 1em auto; /* Auto margins for horizontal centering */
+	padding: 10px 20px;
+	max-width: 600px; /* Maximum width to control the size on larger screens */
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	transition: background-color 0.3s;
 }
 
 .dark-mode-title {
-	background-color: #333 !important;
-	color: #fff !important;
+	background-color: #333;
+	color: #fff;
 }
 
 .light-mode-title {
-	background-color: #f9f9f9 !important;
-	color: #333 !important;
+	background-color: #f9f9f9;
+	color: #333;
 }
 
 .app-title {
-	font-size: 1.5em !important;
-	margin: 0 !important;
+	font-size: 2em; /* Larger size for emphasis */
+	margin: 0.5em 0; /* Adjusted margin for better spacing */
+	font-weight: bold; /* Bold font for impact */
 }
 
 .app-summary {
-	font-size: 1.2em !important;
-	margin: 0.5em 0 0 0 !important;
+	font-size: 1.2em;
+	margin: 0.5em 0; /* Consistent margin with the title */
+	color: #6c757d; /* Slightly subdued color for contrast */
 }
 
 /* Button Styles */
