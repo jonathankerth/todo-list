@@ -136,8 +136,14 @@ const App = () => {
 
 	return (
 		<div className="container mt-5 left-align-items">
+			<div className="button-container">
+				{user && (
+					<button className="btn btn-danger" onClick={handleLogout}>
+						Logout
+					</button>
+				)}
+			</div>
 			<AppTitle darkMode={darkMode} />
-
 			<Routes>
 				<Route
 					path="/login"
@@ -224,8 +230,8 @@ const App = () => {
 												).forEach((el) => el.classList.remove("dragging"));
 											}}
 											className={`list-group-item ${
-												darkMode ? "bg-secondary text-white" : ""
-											}`}
+												task.completed ? "completed-task" : ""
+											} ${darkMode ? "bg-secondary text-white" : ""}`}
 											key={index}
 										>
 											<input
@@ -251,11 +257,6 @@ const App = () => {
 					}
 				/>
 			</Routes>
-			{user && (
-				<button className="btn btn-danger mt-3" onClick={handleLogout}>
-					Logout
-				</button>
-			)}
 		</div>
 	);
 };

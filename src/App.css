@@ -5,6 +5,7 @@
 .left-align-items {
 	text-align: left;
 }
+
 .list-group-item {
 	position: relative;
 	text-align: left;
@@ -40,7 +41,19 @@
 	margin-bottom: 1rem;
 	text-align: left;
 }
+.list-group-item.completed-task,
+.list-group-item.bg-secondary.completed-task {
+	color: #444445; /* Grey text color, increase contrast if needed */
+	background-color: #e9ecef; /* Light grey background, adjust for visibility */
+	text-decoration: line-through; /* Strike-through effect */
+	opacity: 0.7; /* Makes the item look more "disabled" */
+}
 
+/* Override styles for dark mode if necessary */
+.list-group-item.bg-secondary.completed-task {
+	background-color: #5a6268; /* Darker background for dark mode */
+	color: #d3d3d3; /* Lighter text for contrast in dark mode */
+}
 .btn-danger {
 	background-color: #dc3545;
 }
@@ -81,10 +94,44 @@
 	margin: 0.5em 0 0 0 !important;
 }
 
+/* Button Styles */
+.btn {
+	border: none; /* Remove default border */
+	padding: 8px 15px; /* Adjust padding for a better size */
+	font-size: 1rem; /* Ensure readable font size */
+	border-radius: 20px; /* Rounded corners for a modern look */
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+	margin-right: 10px; /* Space between buttons */
+}
+
+.btn-danger {
+	background-color: #dc3545;
+}
+
+.btn-danger:hover {
+	background-color: #c82333; /* Slightly darker on hover */
+}
+
+.btn-secondary {
+	background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+	background-color: #5a6268; /* Slightly darker on hover */
+}
+
+/* Adjusting Spacing Around Buttons */
 .mt-3 {
-	margin-top: 1rem !important;
+	margin-top: 1rem; /* Top margin */
 }
 
 .mb-3 {
-	margin-bottom: 1rem !important;
+	margin-bottom: 1rem; /* Bottom margin */
+}
+
+/* Button Container Spacing */
+.button-container {
+	display: flex;
+	justify-content: flex-end; /* Aligns button to the right */
+	margin-bottom: 20px;
 }
