@@ -5,7 +5,32 @@
 .left-align-items {
 	text-align: left;
 }
+.list-group-item {
+	position: relative;
+	text-align: left;
+	border-radius: 30px !important; /* Uniform border-radius */
+	margin-bottom: 20px; /* Increased spacing between items */
+	padding: 20px 30px; /* Padding for better spacing within each item */
+	border: 1px solid #ccc; /* Border for each item */
+	display: flex; /* Flexbox for internal alignment */
+	align-items: center; /* Center content vertically */
+	justify-content: space-between; /* Space out content within the item */
+}
 
+/* Additional hover effect for better UX */
+.list-group-item:hover {
+	cursor: move;
+	background-color: #f8f9fa; /* Light background on hover */
+}
+
+/* Styles for dragging states */
+.list-group-item.dragging {
+	opacity: 0.5;
+}
+
+.list-group-item.drag-over {
+	border: 2px dashed #ccc;
+}
 .list-group-item {
 	position: relative;
 	text-align: left;

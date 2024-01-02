@@ -196,6 +196,33 @@ const App = () => {
 								<ul className="list-group">
 									{tasks.map((task, index) => (
 										<li
+											draggable
+											onDragStart={(e) => {
+												e.dataTransfer.setData("text/plain", index);
+												e.target.classList.add("dragging");
+											}}
+											onDragEnd={(e) => {
+												e.target.classList.remove("dragging");
+											}}
+											onDragOver={(e) => e.preventDefault()}
+											onDragEnter={(e) => e.target.classList.add("drag-over")}
+											onDragLeave={(e) =>
+												e.target.classList.remove("drag-over")
+											}
+											onDrop={(e) => {
+												e.preventDefault();
+												const originalPosition =
+													e.dataTransfer.getData("text/plain");
+												let updatedTasks = [...tasks];
+												const draggedTask = updatedTasks[originalPosition];
+												updatedTasks.splice(originalPosition, 1);
+												updatedTasks.splice(index, 0, draggedTask);
+												setTasks(updatedTasks);
+												e.target.classList.remove("drag-over");
+												Array.from(
+													document.querySelectorAll(".dragging")
+												).forEach((el) => el.classList.remove("dragging"));
+											}}
 											className={`list-group-item ${
 												darkMode ? "bg-secondary text-white" : ""
 											}`}
