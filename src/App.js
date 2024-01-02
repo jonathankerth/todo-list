@@ -25,7 +25,6 @@ const App = () => {
 	const [dueDate, setDueDate] = useState("");
 	const [category, setCategory] = useState("Work");
 	const [darkMode, setDarkMode] = useState(true);
-	const [ws, setWs] = useState(null);
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
 
@@ -43,24 +42,13 @@ const App = () => {
 			setLoading(false);
 
 			if (user) {
-				const webSocket = new WebSocket(
-					`wss://get-it-done-6f00422d8b4b.herokuapp.com?userId=${user.uid}`
-				);
-				webSocket.onopen = () => console.log("Connected to WebSocket server");
-				webSocket.onmessage = (event) => {
-					setTasks(JSON.parse(event.data));
-				};
-				setWs(webSocket);
-
 				const tasksRef = ref(db, `tasks/${user.uid}`);
 				const snapshot = await get(child(tasksRef, "/"));
-				if (snapshot.exists()) {
+				if (snapshot.exists() && Array.isArray(snapshot.val())) {
 					setTasks(snapshot.val());
+				} else {
+					console.log("No tasks found or invalid format in database");
 				}
-
-				return () => {
-					webSocket.close();
-				};
 			}
 		});
 
@@ -77,26 +65,17 @@ const App = () => {
 		}
 	}, [darkMode]);
 
-	const safeSend = (data) => {
-		if (ws && ws.readyState === WebSocket.OPEN) {
-			ws.send(JSON.stringify(data));
-		}
-	};
-
 	const addTask = async () => {
 		if (newTask === "") return;
 		const updatedTasks = [
 			...tasks,
 			{ text: newTask, dueDate, category, completed: false },
 		];
-
+		setTasks(updatedTasks);
 		if (user) {
 			const tasksRef = ref(db, `tasks/${user.uid}`);
 			await set(tasksRef, updatedTasks);
 		}
-
-		setTasks(updatedTasks);
-		safeSend(updatedTasks);
 
 		setNewTask("");
 		setDueDate("");
@@ -105,27 +84,34 @@ const App = () => {
 
 	const deleteTask = async (index) => {
 		const updatedTasks = tasks.filter((_, i) => i !== index);
-
+		setTasks(updatedTasks);
 		if (user) {
 			const tasksRef = ref(db, `tasks/${user.uid}`);
 			await set(tasksRef, updatedTasks);
 		}
-
-		setTasks(updatedTasks);
-		safeSend(updatedTasks);
 	};
 
 	const toggleCompleted = async (index) => {
 		const updatedTasks = [...tasks];
 		updatedTasks[index].completed = !updatedTasks[index].completed;
-
+		setTasks(updatedTasks);
 		if (user) {
 			const tasksRef = ref(db, `tasks/${user.uid}`);
 			await set(tasksRef, updatedTasks);
 		}
+	};
 
+	const onDropTask = async (e, index) => {
+		e.preventDefault();
+		const originalPosition = parseInt(e.dataTransfer.getData("text/plain"), 10);
+		const updatedTasks = [...tasks];
+		const draggedTask = updatedTasks.splice(originalPosition, 1)[0];
+		updatedTasks.splice(index, 0, draggedTask);
 		setTasks(updatedTasks);
-		safeSend(updatedTasks);
+		if (user) {
+			const tasksRef = ref(db, `tasks/${user.uid}`);
+			await set(tasksRef, updatedTasks);
+		}
 	};
 
 	let location = useLocation();
@@ -165,7 +151,6 @@ const App = () => {
 									{darkMode ? "Light Mode" : "Dark Mode"}
 								</button>
 								<h1>Tasks</h1>
-
 								<div className="input-group mb-3">
 									<input
 										type="text"
@@ -198,37 +183,15 @@ const App = () => {
 										Add
 									</button>
 								</div>
-
 								<ul className="list-group">
 									{tasks.map((task, index) => (
 										<li
 											draggable
-											onDragStart={(e) => {
-												e.dataTransfer.setData("text/plain", index);
-												e.target.classList.add("dragging");
-											}}
-											onDragEnd={(e) => {
-												e.target.classList.remove("dragging");
-											}}
-											onDragOver={(e) => e.preventDefault()}
-											onDragEnter={(e) => e.target.classList.add("drag-over")}
-											onDragLeave={(e) =>
-												e.target.classList.remove("drag-over")
+											onDragStart={(e) =>
+												e.dataTransfer.setData("text/plain", index.toString())
 											}
-											onDrop={(e) => {
-												e.preventDefault();
-												const originalPosition =
-													e.dataTransfer.getData("text/plain");
-												let updatedTasks = [...tasks];
-												const draggedTask = updatedTasks[originalPosition];
-												updatedTasks.splice(originalPosition, 1);
-												updatedTasks.splice(index, 0, draggedTask);
-												setTasks(updatedTasks);
-												e.target.classList.remove("drag-over");
-												Array.from(
-													document.querySelectorAll(".dragging")
-												).forEach((el) => el.classList.remove("dragging"));
-											}}
+											onDragOver={(e) => e.preventDefault()}
+											onDrop={(e) => onDropTask(e, index)}
 											className={`list-group-item ${
 												task.completed ? "completed-task" : ""
 											} ${darkMode ? "bg-secondary text-white" : ""}`}
