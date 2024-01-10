@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { ref, set, get, child } from "firebase/database";
 import Login from "./login";
@@ -7,6 +7,12 @@ import Signup from "./signup";
 import app, { db } from "./firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+
+import AddTask from "./components/AddTask";
+import TaskList from "./components/TaskList";
+import DarkModeToggle from "./components/DarkModeToggle";
+import Loading from "./components/Loading";
+import AuthRoute from "./components/AuthRoute";
 
 const AppTitle = ({ darkMode }) => (
 	<div
@@ -35,36 +41,6 @@ const App = () => {
 		});
 	};
 
-	useEffect(() => {
-		const auth = getAuth(app);
-		const unsubscribe = onAuthStateChanged(auth, async (user) => {
-			setUser(user);
-			setLoading(false);
-
-			if (user) {
-				const tasksRef = ref(db, `tasks/${user.uid}`);
-				const snapshot = await get(child(tasksRef, "/"));
-				if (snapshot.exists() && Array.isArray(snapshot.val())) {
-					setTasks(snapshot.val());
-				} else {
-					console.log("No tasks found or invalid format in database");
-				}
-			}
-		});
-
-		return () => {
-			unsubscribe();
-		};
-	}, []);
-
-	useEffect(() => {
-		if (darkMode) {
-			document.body.classList.add("bg-dark", "text-white");
-		} else {
-			document.body.classList.remove("bg-dark", "text-white");
-		}
-	}, [darkMode]);
-
 	const addTask = async () => {
 		if (newTask === "") return;
 		const updatedTasks = [
@@ -76,7 +52,6 @@ const App = () => {
 			const tasksRef = ref(db, `tasks/${user.uid}`);
 			await set(tasksRef, updatedTasks);
 		}
-
 		setNewTask("");
 		setDueDate("");
 		setCategory("Work");
@@ -114,10 +89,38 @@ const App = () => {
 		}
 	};
 
-	let location = useLocation();
+	useEffect(() => {
+		const auth = getAuth(app);
+		const unsubscribe = onAuthStateChanged(auth, async (user) => {
+			setUser(user);
+			setLoading(false);
+
+			if (user) {
+				const tasksRef = ref(db, `tasks/${user.uid}`);
+				const snapshot = await get(child(tasksRef, "/"));
+				if (snapshot.exists() && Array.isArray(snapshot.val())) {
+					setTasks(snapshot.val());
+				} else {
+					console.log("No tasks found or invalid format in database");
+				}
+			}
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	}, []);
+
+	useEffect(() => {
+		if (darkMode) {
+			document.body.classList.add("bg-dark", "text-white");
+		} else {
+			document.body.classList.remove("bg-dark", "text-white");
+		}
+	}, [darkMode]);
 
 	if (loading) {
-		return <div>Loading...</div>;
+		return <Loading />;
 	}
 
 	return (
@@ -142,81 +145,28 @@ const App = () => {
 				<Route
 					path="/"
 					element={
-						user ? (
+						<AuthRoute user={user} redirectTo="/login">
 							<>
-								<button
-									className="btn btn-secondary mode-toggle-button"
-									onClick={() => setDarkMode(!darkMode)}
-								>
-									{darkMode ? "Light Mode" : "Dark Mode"}
-								</button>
+								<DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
 								<h1>Tasks</h1>
-								<div className="input-group mb-3">
-									<input
-										type="text"
-										className="form-control"
-										placeholder="New Task"
-										value={newTask}
-										onChange={(e) => setNewTask(e.target.value)}
-									/>
-									<input
-										type="date"
-										className="form-control"
-										value={dueDate}
-										onChange={(e) => setDueDate(e.target.value)}
-									/>
-									<select
-										className="form-control"
-										value={category}
-										onChange={(e) => setCategory(e.target.value)}
-									>
-										<option value="Work">Work</option>
-										<option value="Personal">Personal</option>
-										<option value="Family">Family</option>
-										<option value="Long term goals">Long term goals</option>
-									</select>
-									<button
-										className="btn btn-primary"
-										type="button"
-										onClick={addTask}
-									>
-										Add
-									</button>
-								</div>
-								<ul className="list-group">
-									{tasks.map((task, index) => (
-										<li
-											draggable
-											onDragStart={(e) =>
-												e.dataTransfer.setData("text/plain", index.toString())
-											}
-											onDragOver={(e) => e.preventDefault()}
-											onDrop={(e) => onDropTask(e, index)}
-											className={`list-group-item ${
-												task.completed ? "completed-task" : ""
-											} ${darkMode ? "bg-secondary text-white" : ""}`}
-											key={index}
-										>
-											<input
-												type="checkbox"
-												checked={task.completed}
-												onChange={() => toggleCompleted(index)}
-											/>
-											{task.text} (Due: {task.dueDate || "N/A"}) - Category:{" "}
-											{task.category}
-											<button
-												className="btn btn-danger btn-sm float-end"
-												onClick={() => deleteTask(index)}
-											>
-												Delete
-											</button>
-										</li>
-									))}
-								</ul>
+								<AddTask
+									newTask={newTask}
+									setNewTask={setNewTask}
+									dueDate={dueDate}
+									setDueDate={setDueDate}
+									category={category}
+									setCategory={setCategory}
+									addTask={addTask}
+								/>
+								<TaskList
+									tasks={tasks}
+									deleteTask={deleteTask}
+									toggleCompleted={toggleCompleted}
+									onDropTask={onDropTask}
+									darkMode={darkMode}
+								/>
 							</>
-						) : (
-							<Navigate to="/login" state={{ from: location }} />
-						)
+						</AuthRoute>
 					}
 				/>
 			</Routes>
