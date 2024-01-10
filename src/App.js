@@ -2,12 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { ref, set, get, child } from "firebase/database";
-import Login from "./login";
-import Signup from "./signup";
 import app, { db } from "./firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-
+import Login from "./components/login";
+import Signup from "./components/signup";
 import AddTask from "./components/AddTask";
 import TaskList from "./components/TaskList";
 import DarkModeToggle from "./components/DarkModeToggle";
