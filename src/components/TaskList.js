@@ -55,7 +55,9 @@ const TaskList = ({ tasks, deleteTask, toggleCompleted, onDropTask }) => {
 							<FaTag className="me-1" />
 							{task.category || "No Category"}
 						</span>
-						<span className="badge bg-info me-1">
+						<span
+							className={`badge ${getPriorityBadgeClass(task.priority)} me-1`}
+						>
 							<FaTachometerAlt className="me-1" />
 							{task.priority || "No Priority"}
 						</span>
@@ -71,5 +73,18 @@ const TaskList = ({ tasks, deleteTask, toggleCompleted, onDropTask }) => {
 		</ul>
 	);
 };
+
+function getPriorityBadgeClass(priority) {
+	switch (priority) {
+		case "High":
+			return "bg-danger";
+		case "Medium":
+			return "bg-warning";
+		case "Low":
+			return "bg-success";
+		default:
+			return "bg-secondary";
+	}
+}
 
 export default TaskList;
