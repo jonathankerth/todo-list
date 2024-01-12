@@ -15,8 +15,5 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-console.log("Firebase App Initialized:", app);
-console.log("Firebase Database Reference:", db);
-
 export { db };
 export default app;
