@@ -15,12 +15,17 @@ import AuthRoute from "./components/AuthRoute";
 
 const AppTitle = ({ darkMode }) => (
 	<div
-		className={`app-title-container ${
-			darkMode ? "dark-mode-title" : "light-mode-title"
+		className={`text-center p-4 ${
+			darkMode ? "bg-dark text-white" : "bg-light"
 		}`}
+		style={{ borderRadius: "15px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
 	>
-		<h1 className="app-title">To-do list</h1>
-		<p className="app-summary">Stay organized and boost productivity.</p>
+		<h1 className={`display-4 ${darkMode ? "text-white" : "text-dark"}`}>
+			To-do List
+		</h1>
+		<p className={`lead ${darkMode ? "text-white-50" : "text-secondary"}`}>
+			Stay organized and boost productivity.
+		</p>
 	</div>
 );
 
@@ -32,6 +37,8 @@ const App = () => {
 	const [darkMode, setDarkMode] = useState(true);
 	const [user, setUser] = useState(null);
 	const [loading, setLoading] = useState(true);
+	const [priority, setPriority] = useState("");
+	const [description, setDescription] = useState("");
 
 	const handleLogout = () => {
 		const auth = getAuth(app);
@@ -40,20 +47,25 @@ const App = () => {
 		});
 	};
 
-	const addTask = async () => {
+	const addTask = async (task) => {
+		const { newTask, dueDate, category, priority, description } = task;
 		if (newTask === "") return;
 		const updatedTasks = [
 			...tasks,
-			{ text: newTask, dueDate, category, completed: false },
+			{
+				text: newTask,
+				dueDate,
+				category,
+				priority,
+				description,
+				completed: false,
+			},
 		];
 		setTasks(updatedTasks);
 		if (user) {
 			const tasksRef = ref(db, `tasks/${user.uid}`);
 			await set(tasksRef, updatedTasks);
 		}
-		setNewTask("");
-		setDueDate("");
-		setCategory("Work");
 	};
 
 	const deleteTask = async (index) => {
@@ -155,6 +167,10 @@ const App = () => {
 									setDueDate={setDueDate}
 									category={category}
 									setCategory={setCategory}
+									priority={priority}
+									setPriority={setPriority}
+									description={description}
+									setDescription={setDescription}
 									addTask={addTask}
 								/>
 								<TaskList

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
-import "./Login.css";
+import "./styles/Login.css";
 
 const Signup = ({ darkMode, setDarkMode }) => {
 	const [email, setEmail] = useState("");
