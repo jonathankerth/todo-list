@@ -20,3 +20,18 @@
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 	margin-bottom: 1rem;
 }
+.category-work {
+	background-color: blue;
+}
+
+.category-personal {
+	background-color: green;
+}
+
+.category-family {
+	background-color: orange;
+}
+
+.category-long-term-goals {
+	background-color: purple;
+}

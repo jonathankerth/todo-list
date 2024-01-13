@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { ref, set, get, child } from "firebase/database";
+import { ref, set, onValue } from "firebase/database";
 import app, { db } from "./firebase";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -108,12 +108,14 @@ const App = () => {
 
 			if (user) {
 				const tasksRef = ref(db, `tasks/${user.uid}`);
-				const snapshot = await get(child(tasksRef, "/"));
-				if (snapshot.exists() && Array.isArray(snapshot.val())) {
-					setTasks(snapshot.val());
-				} else {
-					console.log("No tasks found or invalid format in database");
-				}
+
+				onValue(tasksRef, (snapshot) => {
+					if (snapshot.exists() && Array.isArray(snapshot.val())) {
+						setTasks(snapshot.val());
+					} else {
+						console.log("No tasks found or invalid format in database");
+					}
+				});
 			}
 		});
 
@@ -121,7 +123,6 @@ const App = () => {
 			unsubscribe();
 		};
 	}, []);
-
 	useEffect(() => {
 		if (darkMode) {
 			document.body.classList.add("bg-dark", "text-white");
