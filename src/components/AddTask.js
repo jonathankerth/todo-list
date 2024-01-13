@@ -8,6 +8,7 @@ const AddTask = ({ addTask }) => {
 	const [category, setCategory] = useState("");
 	const [priority, setPriority] = useState("");
 	const [description, setDescription] = useState("");
+	const [isFormVisible, setIsFormVisible] = useState(false);
 
 	const handleSubmit = () => {
 		if (!newTask) {
@@ -24,49 +25,60 @@ const AddTask = ({ addTask }) => {
 
 	return (
 		<div className="add-task">
-			<input
-				type="text"
-				className="form-control"
-				placeholder="New Task"
-				value={newTask}
-				onChange={(e) => setNewTask(e.target.value)}
-			/>
-			<textarea
-				className="form-control"
-				placeholder="Description"
-				value={description}
-				onChange={(e) => setDescription(e.target.value)}
-			/>
-			<input
-				type="date"
-				className="form-control"
-				value={dueDate}
-				onChange={(e) => setDueDate(e.target.value)}
-			/>
-			<select
-				className="form-control"
-				value={category}
-				onChange={(e) => setCategory(e.target.value)}
+			<button
+				className="btn btn-primary mb-3"
+				onClick={() => setIsFormVisible(!isFormVisible)}
 			>
-				<option value="">Select Category</option>
-				<option value="Work">Work</option>
-				<option value="Personal">Personal</option>
-				<option value="Family">Family</option>
-				<option value="Long term goals">Long term goals</option>
-			</select>
-			<select
-				className="form-control"
-				value={priority}
-				onChange={(e) => setPriority(e.target.value)}
-			>
-				<option value="">Set Priority</option>
-				<option value="Low">Low</option>
-				<option value="Medium">Medium</option>
-				<option value="High">High</option>
-			</select>
-			<button className="btn-add" onClick={handleSubmit}>
-				<FaPlus /> Add
+				<FaPlus /> {isFormVisible ? "Close" : "Add Task"}
 			</button>
+
+			{isFormVisible && (
+				<>
+					<input
+						type="text"
+						className="form-control mb-2"
+						placeholder="New Task"
+						value={newTask}
+						onChange={(e) => setNewTask(e.target.value)}
+					/>
+					<textarea
+						className="form-control mb-2"
+						placeholder="Description"
+						value={description}
+						onChange={(e) => setDescription(e.target.value)}
+					/>
+					<input
+						type="date"
+						className="form-control mb-2"
+						value={dueDate}
+						onChange={(e) => setDueDate(e.target.value)}
+					/>
+					<select
+						className="form-control mb-2"
+						value={category}
+						onChange={(e) => setCategory(e.target.value)}
+					>
+						<option value="">Select Category</option>
+						<option value="Work">Work</option>
+						<option value="Personal">Personal</option>
+						<option value="Family">Family</option>
+						<option value="Long term goals">Long term goals</option>
+					</select>
+					<select
+						className="form-control mb-2"
+						value={priority}
+						onChange={(e) => setPriority(e.target.value)}
+					>
+						<option value="">Set Priority</option>
+						<option value="Low">Low</option>
+						<option value="Medium">Medium</option>
+						<option value="High">High</option>
+					</select>
+					<button className="btn btn-success" onClick={handleSubmit}>
+						Add Task
+					</button>
+				</>
+			)}
 		</div>
 	);
 };
