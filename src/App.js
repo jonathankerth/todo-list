@@ -15,17 +15,12 @@ import AuthRoute from "./components/AuthRoute";
 
 const AppTitle = ({ darkMode }) => (
 	<div
-		className={`text-center p-4 ${
-			darkMode ? "bg-dark text-white" : "bg-light"
+		className={`app-title-container ${
+			darkMode ? "dark-mode-title" : "light-mode-title"
 		}`}
-		style={{ borderRadius: "15px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
 	>
-		<h1 className={`display-4 ${darkMode ? "text-white" : "text-dark"}`}>
-			To-do List
-		</h1>
-		<p className={`lead ${darkMode ? "text-white-50" : "text-secondary"}`}>
-			Stay organized and boost productivity.
-		</p>
+		<h1 className="app-title">To-do List</h1>
+		<p className="app-summary">Stay organized and boost productivity.</p>
 	</div>
 );
 
@@ -137,11 +132,24 @@ const App = () => {
 
 	return (
 		<div className="container mt-5 left-align-items">
-			<div className="button-container">
-				{user && (
-					<button className="btn btn-danger" onClick={handleLogout}>
-						Logout
-					</button>
+			<div className="button-container d-flex justify-content-end">
+				{user ? (
+					<>
+						<DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
+						<button className="btn btn-danger ml-2" onClick={handleLogout}>
+							Logout
+						</button>
+					</>
+				) : (
+					<>
+						<DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
+						<button className="btn btn-secondary ml-2">
+							<a href="/login">Login</a>
+						</button>
+						<button className="btn btn-secondary ml-2">
+							<a href="/signup">Signup</a>
+						</button>
+					</>
 				)}
 			</div>
 			<AppTitle darkMode={darkMode} />
@@ -159,7 +167,6 @@ const App = () => {
 					element={
 						<AuthRoute user={user} redirectTo="/login">
 							<>
-								<DarkModeToggle darkMode={darkMode} setDarkMode={setDarkMode} />
 								<h1>Tasks</h1>
 								<AddTask
 									newTask={newTask}
